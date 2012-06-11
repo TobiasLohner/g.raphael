@@ -78,8 +78,6 @@
             len = Math.max(len, valuesy[i].length);
         }
 
-        var shades = createShades();
-
         var valuesx_shrinked = [];
         var valuesy_shrinked = [];
 
@@ -105,6 +103,7 @@
             kx = (width - gutter * 2) / ((maxx - minx) || 1),
             ky = (height - gutter * 2) / ((maxy - miny) || 1);
 
+        var shades = createShades();
         var axis = createAxis();
 
         var res = createLines();
