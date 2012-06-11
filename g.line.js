@@ -87,12 +87,10 @@
         var valuesy_shrinked = [];
 
         for (i = 0, ii = valuesy.length; i < ii; i++) {
-            if (valuesy[i].length > width - 2 * gutter) {
-                valuesy_shrinked[i] = shrink(valuesy[i], width - 2 * gutter);
-                len = width - 2 * gutter;
-            }
+            valuesy_shrinked[i] = shrink(valuesy[i], width - 2 * gutter);
+            len = valuesy_shrinked.lenght;
 
-            if (valuesx[i] && valuesx[i].length > width - 2 * gutter) {
+            if (valuesx[i]) {
                 valuesx_shrinked[i] = shrink(valuesx[i], width - 2 * gutter);
             }
         }
@@ -341,12 +339,10 @@
 
         chart.zoomInto = function(from, to) {
             for (i = 0, ii = valuesy.length; i < ii; i++) {
-                if (valuesy[i].slice(from, to+1).length > width - 2 * gutter) {
-                    valuesy_shrinked[i] = shrink(valuesy[i].slice(from, to+1), width - 2 * gutter);
-                    len = width - 2 * gutter;
-                }
+                valuesy_shrinked[i] = shrink(valuesy[i].slice(from, to+1), width - 2 * gutter);
+                len = valuesy_shrinked.lenght;
 
-                if (valuesx[i] && valuesx[i].slice(from, to+1).length > width - 2 * gutter) {
+                if (valuesx[i]) {
                     valuesx_shrinked[i] = shrink(valuesx[i].slice(from, to+1), width - 2 * gutter);
                 }
             }
