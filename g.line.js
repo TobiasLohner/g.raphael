@@ -13,18 +13,23 @@
             sum = 0,
             res = [];
 
-        while (j < values.length) {
-            l--;
+        if (k > 1) {
+            while (j < values.length) {
+                l--;
 
-            if (l < 0) {
-                sum += values[j] * (1 + l);
-                res.push(sum / k);
-                sum = values[j++] * -l;
-                l += k;
-            } else {
-                sum += values[j++];
+                if (l < 0) {
+                    sum += values[j] * (1 + l);
+                    res.push(sum / k);
+                    sum = values[j++] * -l;
+                    l += k;
+                } else {
+                    sum += values[j++];
+                }
             }
+        } else {
+            res = values;
         }
+
         return res;
     }
 
