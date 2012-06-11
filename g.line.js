@@ -78,13 +78,9 @@
             len = Math.max(len, valuesy[i].length);
         }
 
-        var shades = paper.set();
+        var shades = createShades();
 
         for (i = 0, ii = valuesy.length; i < ii; i++) {
-            if (opts.shade) {
-                shades.push(paper.path().attr({ stroke: "none", fill: colors[i], opacity: opts.nostroke ? 1 : .3 }));
-            }
-
             if (valuesy[i].length > width - 2 * gutter) {
                 valuesy[i] = shrink(valuesy[i], width - 2 * gutter);
                 len = width - 2 * gutter;
@@ -112,6 +108,17 @@
         var lines = res.lines,
             symbols = res.symbols;
 
+        function createShades() {
+            var shades = paper.set();
+
+            for (i = 0, ii = valuesy.length; i < ii; i++) {
+                if (opts.shade) {
+                    shades.push(paper.path().attr({ stroke: "none", fill: colors[i], opacity: opts.nostroke ? 1 : .3 }));
+                }
+            }
+            return shades;
+        }
+
         function createAxis() {
             var axis = paper.set();
 
@@ -124,8 +131,6 @@
             }
             return axis;
         }
-
-
 
         function createLines() {
             var lines = paper.set(),
