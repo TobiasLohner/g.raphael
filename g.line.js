@@ -106,19 +106,26 @@
             kx = (width - gutter * 2) / ((maxx - minx) || 1),
             ky = (height - gutter * 2) / ((maxy - miny) || 1);
 
-        var axis = paper.set();
-
-        if (opts.axis) {
-            var ax = (opts.axis + "").split(/[,\s]+/);
-            +ax[0] && axis.push(chartinst.axis(x + gutter, y + gutter, width - 2 * gutter, minx, maxx, opts.axisxstep || Math.floor((width - 2 * gutter) / 20), 2, paper));
-            +ax[1] && axis.push(chartinst.axis(x + width - gutter, y + height - gutter, height - 2 * gutter, miny, maxy, opts.axisystep || Math.floor((height - 2 * gutter) / 20), 3, paper));
-            +ax[2] && axis.push(chartinst.axis(x + gutter, y + height - gutter, width - 2 * gutter, minx, maxx, opts.axisxstep || Math.floor((width - 2 * gutter) / 20), 0, paper));
-            +ax[3] && axis.push(chartinst.axis(x + gutter, y + height - gutter, height - 2 * gutter, miny, maxy, opts.axisystep || Math.floor((height - 2 * gutter) / 20), 1, paper));
-        }
+        var axis = createAxis();
 
         var res = createLines();
         var lines = res.lines,
             symbols = res.symbols;
+
+        function createAxis() {
+            var axis = paper.set();
+
+            if (opts.axis) {
+                var ax = (opts.axis + "").split(/[,\s]+/);
+                +ax[0] && axis.push(chartinst.axis(x + gutter, y + gutter, width - 2 * gutter, minx, maxx, opts.axisxstep || Math.floor((width - 2 * gutter) / 20), 2, paper));
+                +ax[1] && axis.push(chartinst.axis(x + width - gutter, y + height - gutter, height - 2 * gutter, miny, maxy, opts.axisystep || Math.floor((height - 2 * gutter) / 20), 3, paper));
+                +ax[2] && axis.push(chartinst.axis(x + gutter, y + height - gutter, width - 2 * gutter, minx, maxx, opts.axisxstep || Math.floor((width - 2 * gutter) / 20), 0, paper));
+                +ax[3] && axis.push(chartinst.axis(x + gutter, y + height - gutter, height - 2 * gutter, miny, maxy, opts.axisystep || Math.floor((height - 2 * gutter) / 20), 1, paper));
+            }
+            return axis;
+        }
+
+
 
         function createLines() {
             var lines = paper.set(),
