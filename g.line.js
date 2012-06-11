@@ -347,11 +347,11 @@
                 }
             }
 
-            allx = Array.prototype.concat.apply([], valuesx_shrink),
-            xdim = chartinst.snapEnds(Math.min.apply(Math, allx), Math.max.apply(Math, allx), valuesx_shrink[0].length - 1),
-            minx = xdim.from,
-            maxx = xdim.to,
-            kx = (width - gutter * 2) / ((maxx - minx) || 1),
+            allx = Array.prototype.concat.apply([], valuesx_shrink);
+            xdim = chartinst.snapEnds(Math.min.apply(Math, allx), Math.max.apply(Math, allx), valuesx_shrink[0].length - 1);
+            minx = xdim.from;
+            maxx = xdim.to;
+            kx = (width - gutter * 2) / ((maxx - minx) || 1);
 
             var res = createLines();
             lines = res.lines,
