@@ -367,6 +367,19 @@
             chart.axis = createAxis();
         }
 
+        chart.getProperties = function() {
+            return { minx: minx,
+                     maxx: maxx,
+                     miny: miny,
+                     maxy: maxy,
+                     gutter: gutter,
+                     width: width,
+                     height: height,
+                     x: x,
+                     y: y,
+                     kx: kx,
+                     ky: ky };
+        }
 
         return chart;
     };
