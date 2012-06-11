@@ -789,7 +789,7 @@ Raphael.g = {
         return { from: f, to: t, power: i };
     },
 
-    axis: function (x, y, length, from, to, steps, orientation, labels, type, dashsize, paper) {
+    axis: function (x, y, length, from, to, steps, orientation, labels, type, dashsize, func, paper) {
         dashsize = dashsize == null ? 2 : dashsize;
         type = type || "t";
         steps = steps || 10;
@@ -816,15 +816,19 @@ Raphael.g = {
                 addon = (orientation - 1 ? 1 : -1) * (dashsize + 3 + !!(orientation - 1));
 
             while (Y >= y - length) {
+                var t_label = (typeof(labels) == "function")?labels.call(null, Math.round(label) == label ? label : +label.toFixed(rnd)):
+                              ((labels && labels[j++]) || (Math.round(label) == label ? label : +label.toFixed(rnd)));
                 type != "-" && type != " " && (path = path.concat(["M", x - (type == "+" || type == "|" ? dashsize : !(orientation - 1) * dashsize * 2), Y + .5, "l", dashsize * 2 + 1, 0]));
-                text.push(paper.text(x + addon, Y, (labels && labels[j++]) || (Math.round(label) == label ? label : +label.toFixed(rnd))).attr(txtattr).attr({ "text-anchor": orientation - 1 ? "start" : "end" }));
+                text.push(paper.text(x + addon, Y, t_label).attr(txtattr).attr({ "text-anchor": orientation - 1 ? "start" : "end" }));
                 label += d;
                 Y -= dx;
             }
 
             if (Math.round(Y + dx - (y - length))) {
+                var t_label = (typeof(labels) == "function")?labels.call(null, Math.round(label) == label ? label : +label.toFixed(rnd)):
+                              ((labels && labels[j]) || (Math.round(label) == label ? label : +label.toFixed(rnd)));
                 type != "-" && type != " " && (path = path.concat(["M", x - (type == "+" || type == "|" ? dashsize : !(orientation - 1) * dashsize * 2), y - length + .5, "l", dashsize * 2 + 1, 0]));
-                text.push(paper.text(x + addon, y - length, (labels && labels[j]) || (Math.round(label) == label ? label : +label.toFixed(rnd))).attr(txtattr).attr({ "text-anchor": orientation - 1 ? "start" : "end" }));
+                text.push(paper.text(x + addon, y - length, t_label).attr(txtattr).attr({ "text-anchor": orientation - 1 ? "start" : "end" }));
             }
         } else {
             label = f;
@@ -837,8 +841,10 @@ Raphael.g = {
                 prev = 0;
 
             while (X <= x + length) {
+                var t_label = (typeof(labels) == "function")?labels.call(null, Math.round(label) == label ? label : +label.toFixed(rnd)):
+                              ((labels && labels[j++]) || (Math.round(label) == label ? label : +label.toFixed(rnd)));
                 type != "-" && type != " " && (path = path.concat(["M", X + .5, y - (type == "+" ? dashsize : !!orientation * dashsize * 2), "l", 0, dashsize * 2 + 1]));
-                text.push(txt = paper.text(X, y + addon, (labels && labels[j++]) || (Math.round(label) == label ? label : +label.toFixed(rnd))).attr(txtattr));
+                text.push(txt = paper.text(X, y + addon, t_label).attr(txtattr));
 
                 var bb = txt.getBBox();
 
@@ -853,8 +859,10 @@ Raphael.g = {
             }
 
             if (Math.round(X - dx - x - length)) {
+                var t_label = (typeof(labels) == "function")?labels.call(null, Math.round(label) == label ? label : +label.toFixed(rnd)):
+                              ((labels && labels[j]) || (Math.round(label) == label ? label : +label.toFixed(rnd)));
                 type != "-" && type != " " && (path = path.concat(["M", x + length + .5, y - (type == "+" ? dashsize : !!orientation * dashsize * 2), "l", 0, dashsize * 2 + 1]));
-                text.push(paper.text(x + length, y + addon, (labels && labels[j]) || (Math.round(label) == label ? label : +label.toFixed(rnd))).attr(txtattr));
+                text.push(paper.text(x + length, y + addon, t_label).attr(txtattr));
             }
         }
 
