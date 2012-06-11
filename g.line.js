@@ -335,6 +335,39 @@
             return this;
         };
 
+        chart.zoomInto = function(from, to) {
+            for (i = 0, ii = valuesy.length; i < ii; i++) {
+                if (valuesy[i].slice(from, to+1).length > width - 2 * gutter) {
+                    valuesy_shrinked[i] = shrink(valuesy[i].slice(from, to+1), width - 2 * gutter);
+                    len = width - 2 * gutter;
+                }
+
+                if (valuesx[i] && valuesx[i].slice(from, to+1).length > width - 2 * gutter) {
+                    valuesx_shrinked[i] = shrink(valuesx[i].slice(from, to+1), width - 2 * gutter);
+                }
+            }
+
+            allx = Array.prototype.concat.apply([], valuesx_shrink),
+            xdim = chartinst.snapEnds(Math.min.apply(Math, allx), Math.max.apply(Math, allx), valuesx_shrink[0].length - 1),
+            minx = xdim.from,
+            maxx = xdim.to,
+            kx = (width - gutter * 2) / ((maxx - minx) || 1),
+
+            var res = createLines();
+            lines = res.lines,
+            symbols = res.symbols;
+
+            chart.lines.remove();
+            chart.lines = lines;
+
+            chart.symbols.remove();
+            chart.symbols = symbols;
+
+            chart.axis.remove();
+            chart.axis = createAxis();
+        }
+
+
         return chart;
     };
     
