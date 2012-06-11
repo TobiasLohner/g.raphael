@@ -116,62 +116,69 @@
             +ax[3] && axis.push(chartinst.axis(x + gutter, y + height - gutter, height - 2 * gutter, miny, maxy, opts.axisystep || Math.floor((height - 2 * gutter) / 20), 1, paper));
         }
 
-        var lines = paper.set(),
-            symbols = paper.set(),
-            line;
+        var res = createLines();
+        var lines = res.lines,
+            symbols = res.symbols;
 
-        for (i = 0, ii = valuesy.length; i < ii; i++) {
-            if (!opts.nostroke) {
-                lines.push(line = paper.path().attr({
-                    stroke: colors[i],
-                    "stroke-width": opts.width || 2,
-                    "stroke-linejoin": "round",
-                    "stroke-linecap": "round",
-                    "stroke-dasharray": opts.dash || ""
-                }));
-            }
+        function createLines() {
+            var lines = paper.set(),
+                symbols = paper.set(),
+                line;
 
-            var sym = Raphael.is(symbol, "array") ? symbol[i] : symbol,
-                symset = paper.set();
+            for (i = 0, ii = valuesy.length; i < ii; i++) {
+                if (!opts.nostroke) {
+                    lines.push(line = paper.path().attr({
+                        stroke: colors[i],
+                        "stroke-width": opts.width || 2,
+                        "stroke-linejoin": "round",
+                        "stroke-linecap": "round",
+                        "stroke-dasharray": opts.dash || ""
+                    }));
+                }
 
-            path = [];
+                var sym = Raphael.is(symbol, "array") ? symbol[i] : symbol,
+                    symset = paper.set();
 
-            for (var j = 0, jj = valuesy[i].length; j < jj; j++) {
-                var X = x + gutter + ((valuesx[i] || valuesx[0])[j] - minx) * kx,
-                    Y = y + height - gutter - (valuesy[i][j] - miny) * ky;
+                path = [];
 
-                (Raphael.is(sym, "array") ? sym[j] : sym) && symset.push(paper[Raphael.is(sym, "array") ? sym[j] : sym](X, Y, (opts.width || 2) * 3).attr({ fill: colors[i], stroke: "none" }));
+                for (var j = 0, jj = valuesy[i].length; j < jj; j++) {
+                    var X = x + gutter + ((valuesx[i] || valuesx[0])[j] - minx) * kx,
+                        Y = y + height - gutter - (valuesy[i][j] - miny) * ky;
+
+                    (Raphael.is(sym, "array") ? sym[j] : sym) && symset.push(paper[Raphael.is(sym, "array") ? sym[j] : sym](X, Y, (opts.width || 2) * 3).attr({ fill: colors[i], stroke: "none" }));
+                    if (opts.smooth) {
+                        if (j && j != jj - 1) {
+                            var X0 = x + gutter + ((valuesx[i] || valuesx[0])[j - 1] - minx) * kx,
+                                Y0 = y + height - gutter - (valuesy[i][j - 1] - miny) * ky,
+                                X2 = x + gutter + ((valuesx[i] || valuesx[0])[j + 1] - minx) * kx,
+                                Y2 = y + height - gutter - (valuesy[i][j + 1] - miny) * ky,
+                                a = getAnchors(X0, Y0, X, Y, X2, Y2);
+
+                            path = path.concat([a.x1, a.y1, X, Y, a.x2, a.y2]);
+                        }
+
+                        if (!j) {
+                            path = ["M", X, Y, "C", X, Y];
+                        }
+                    } else {
+                        path = path.concat([j ? "L" : "M", X, Y]);
+                    }
+                }
 
                 if (opts.smooth) {
-                    if (j && j != jj - 1) {
-                        var X0 = x + gutter + ((valuesx[i] || valuesx[0])[j - 1] - minx) * kx,
-                            Y0 = y + height - gutter - (valuesy[i][j - 1] - miny) * ky,
-                            X2 = x + gutter + ((valuesx[i] || valuesx[0])[j + 1] - minx) * kx,
-                            Y2 = y + height - gutter - (valuesy[i][j + 1] - miny) * ky,
-                            a = getAnchors(X0, Y0, X, Y, X2, Y2);
+                    path = path.concat([X, Y, X, Y]);
+                 }
 
-                        path = path.concat([a.x1, a.y1, X, Y, a.x2, a.y2]);
-                    }
+                symbols.push(symset);
 
-                    if (!j) {
-                        path = ["M", X, Y, "C", X, Y];
-                    }
-                } else {
-                    path = path.concat([j ? "L" : "M", X, Y]);
+                if (opts.shade) {
+                    shades[i].attr({ path: path.concat(["L", X, y + height - gutter, "L",  x + gutter + ((valuesx[i] || valuesx[0])[0] - minx) * kx, y + height - gutter, "z"]).join(",") });
                 }
+
+                !opts.nostroke && line.attr({ path: path.join(",") });
             }
 
-            if (opts.smooth) {
-                path = path.concat([X, Y, X, Y]);
-            }
-
-            symbols.push(symset);
-
-            if (opts.shade) {
-                shades[i].attr({ path: path.concat(["L", X, y + height - gutter, "L",  x + gutter + ((valuesx[i] || valuesx[0])[0] - minx) * kx, y + height - gutter, "z"]).join(",") });
-            }
-
-            !opts.nostroke && line.attr({ path: path.join(",") });
+            return { lines: lines, symbols: symbols };
         }
 
         function createColumns(f) {
