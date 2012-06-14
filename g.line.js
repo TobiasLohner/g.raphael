@@ -338,17 +338,27 @@
         };
 
         chart.zoomInto = function(from, to) {
+            var max_len = 0;
+
             for (i = 0, ii = valuesy.length; i < ii; i++) {
-                valuesy_shrinked[i] = shrink(valuesy[i].slice(from, to+1), width - 2 * gutter);
+                if (from[i] == -1 || to[i] == -1) {
+                  valuesx_shrinked[i] = [];
+                  valuesy_shrinked[i] = [];
+                  continue;
+                }
+
+                valuesy_shrinked[i] = shrink(valuesy[i].slice(from[i], to[i]+1), width - 2 * gutter);
                 len = valuesy_shrinked.lenght;
 
                 if (valuesx[i]) {
-                    valuesx_shrinked[i] = shrink(valuesx[i].slice(from, to+1), width - 2 * gutter);
+                    valuesx_shrinked[i] = shrink(valuesx[i].slice(from[i], to[i]+1), width - 2 * gutter);
+                    if (max_len < valuesx_shrinked[i].length) max_len = valuesx_shrinked[i].length;
                 }
             }
 
+
             allx = Array.prototype.concat.apply([], valuesx_shrinked);
-            xdim = chartinst.snapEnds(Math.min.apply(Math, allx), Math.max.apply(Math, allx), valuesx_shrinked[0].length - 1);
+            xdim = chartinst.snapEnds(Math.min.apply(Math, allx), Math.max.apply(Math, allx), max_len - 1);
             minx = xdim.from;
             maxx = xdim.to;
             kx = (width - gutter * 2) / ((maxx - minx) || 1);
