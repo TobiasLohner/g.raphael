@@ -337,6 +337,17 @@
             return this;
         };
 
+        chart.zoomReset = function() {
+            var from = [];
+            var to = [];
+
+            for (i = 0, ii = valuesy.length; i < ii; i++) {
+                from.push(0);
+                to.push(valuesy[i].length-1);
+            }
+            chart.zoomInto(from, to);
+        };
+
         chart.zoomInto = function(from, to) {
             var max_len = 0;
 
