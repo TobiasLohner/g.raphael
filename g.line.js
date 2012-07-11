@@ -106,6 +106,7 @@
             kx = (width - gutter * 2) / ((maxx - minx) || 1),
             ky = (height - gutter * 2) / ((maxy - miny) || 1);
 
+        var stripes = createStripes();
         var shades = createShades();
         var axis = createAxis();
 
@@ -122,6 +123,42 @@
                 }
             }
             return shades;
+        }
+
+        function initStripes() {
+            var stripes = paper.set();
+
+            for (var dx = 0; dx < (width - 2 * gutter); dx++) {
+                var X = x + gutter + dx,
+                    Y = y + height - gutter,
+                    h = height - 2 * gutter;
+
+                stripes.push(paper.path(["M", X, Y, "v", 0, -h])
+                    .attr({ stroke: "#ff0fff" }));
+            }
+
+            return stripes;
+        }
+
+        function createStripes() {
+            var stripes = chart.stripes || initStripes();
+
+            for (i = 0, ii = valuesy_shrinked.length; i < ii; i++) {
+                for (var j = 0, jj = valuesx_shrinked[i].length - 1; j < jj; j++) {
+                    var u = Math.round( ((valuesx_shrinked[i] || valuesx_shrinked[0])[j] - minx) * kx ),
+                        v = Math.round( ((valuesx_shrinked[i] || valuesx_shrinked[0])[j+1] - minx) * kx ),
+                        value = (valuesy_shrinked[i][j] - miny) / (maxy - miny);
+
+                    for (u; u < v; u++) {
+                        // value is the saturation of the color from 0 to 1, where 0 is white and
+                        // 1 is full saturated.
+                        var color = paper.raphael.hsl(60, 100, 100 - (value * 50));
+                        stripes[u].attr({ stroke: color });
+                    }
+                }
+            }
+
+            return stripes;
         }
 
         function createAxis() {
@@ -277,8 +314,9 @@
             !f && (dots = cvrs);
         }
 
-        chart.push(lines, shades, symbols, axis, columns, dots);
+        chart.push(stripes, lines, shades, symbols, axis, columns, dots);
         chart.lines = lines;
+        chart.stripes = stripes;
         chart.shades = shades;
         chart.symbols = symbols;
         chart.axis = axis;
@@ -415,6 +453,8 @@
 
             chart.axis.remove();
             chart.axis = createAxis();
+
+            chart.stripes = createStripes();
         }
 
         chart.getProperties = function() {
