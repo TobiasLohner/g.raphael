@@ -159,8 +159,8 @@
             var u = 0,
                 v = width - 2 * gutter;
 
-            var u_min = 9999,
-                v_max = 0;
+            var u_min = v,
+                v_max = u;
             var base_color = opts.stripes.color || { h: 0.42, s: 1, l: 0.5 };
             var stripes_range = opts.stripes.range || Math.max(1, stripes_maxy - stripes_miny);
 
@@ -185,12 +185,12 @@
             }
 
             // reset stripes which are not set yet...
-            for (u_min; u_min > 0; --u_min) {
-                stripes[u_min].attr({ stroke: "#ffffff" });
+            for (var i = u_min - 1; i >= 0; i--) {
+                stripes[i].attr({ stroke: "#ffffff" });
             }
 
-            for (v_max; v_max < (width - 2 * gutter); v_max++) {
-                stripes[v_max].attr({ stroke: "#ffffff" });
+            for (var i = Math.max(v_max, u_min); i < (width - 2 * gutter); i++) {
+                stripes[i].attr({ stroke: "#ffffff" });
             }
 
             return stripes;
