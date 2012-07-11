@@ -482,8 +482,8 @@
               miny = ydim.from,
               maxy = ydim.to,
               ky = (height - gutter * 2) / ((maxy - miny) || 1),
-              stripes_miny = Math.min.apply(Math, stripesy),
-              stripes_maxy = Math.max.apply(Math, stripesy);
+              stripes_miny = Math.min.apply(Math, stripesy[opts.stripes.id]),
+              stripes_maxy = Math.max.apply(Math, stripesy[opts.stripes.id]);
             }
 
             var res = createLines();
