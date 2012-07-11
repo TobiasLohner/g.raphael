@@ -138,15 +138,15 @@
         }
 
         function initStripes() {
-            var stripes = paper.set();
+            var stripes = paper.set(),
+                Y = y + gutter,
+                h = opts.stripes.height;
 
             for (var dx = 0; dx < (width - 2 * gutter); dx++) {
-                var X = x + gutter + dx,
-                    Y = y + height - gutter,
-                    h = height - 2 * gutter;
+                var X = x + gutter + dx;
 
-                stripes.push(paper.path(["M", X, Y, "v", 0, -h])
-                    .attr({ stroke: "#ff0fff" }));
+                stripes.push(paper.path(["M", X, Y, "v", 0, h])
+                    .attr({ stroke: "#ffffff" }));
             }
 
             return stripes;
@@ -160,6 +160,7 @@
                 v = width - 2 * gutter;
 
             var u_min, v_max;
+            var base_color = opts.stripes.color || { h: 0.42, s: 1, l: 0.5 };
 
             for (var j = 0, jj = stripesx_shrinked.length - 1; j < jj; j++) {
                 u = Math.max(0, Math.round( (stripesx_shrinked[j] - minx) * kx )),
@@ -172,7 +173,11 @@
                 for (u; u < v; u++) {
                     // value is the saturation of the color from 0 to 1, where 0 is white and
                     // 1 is full saturated.
-                    var color = paper.raphael.hsl(60, 100, 100 - (value * 50));
+                    var color = paper.raphael.hsl(
+                        base_color.h * 100,
+                        base_color.s * 100,
+                        base_color.l * 100 + (100 - base_color.l * 100) * value
+                    );
                     stripes[u].attr({ stroke: color });
                 }
             }
