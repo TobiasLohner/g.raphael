@@ -159,7 +159,8 @@
             var u = 0,
                 v = width - 2 * gutter;
 
-            var u_min, v_max;
+            var u_min = 9999,
+                v_max = 0;
             var base_color = opts.stripes.color || { h: 0.42, s: 1, l: 0.5 };
 
             for (var j = 0, jj = stripesx_shrinked.length - 1; j < jj; j++) {
