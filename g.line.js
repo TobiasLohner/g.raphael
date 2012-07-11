@@ -77,7 +77,9 @@
             columns = null,
             dots = null,
             chart = paper.set(),
-            path = [];
+            path = [],
+            stripesx = (opts.stripes && opts.stripes.x) || [],
+            stripesy = (opts.stripes && opts.stripes.y) || [];
 
         for (var i = 0, ii = valuesy.length; i < ii; i++) {
             len = Math.max(len, valuesy[i].length);
@@ -94,6 +96,16 @@
                 valuesx_shrinked[i] = shrink(valuesx[i], width - 2 * gutter);
             }
         }
+
+        var stripesx_shrinked, stripesy_shrinked;
+
+        if (opts.stripes) {
+          stripesx_shrinked = shrink(stripesx, width - 2 * gutter);
+          stripesy_shrinked = shrink(stripesy, width - 2 * gutter);
+        }
+
+        var stripes_miny = Math.min.apply(Math, stripesy),
+            stripes_maxy = Math.max.apply(Math, stripesy);
 
         var allx = Array.prototype.concat.apply([], valuesx_shrinked),
             ally = Array.prototype.concat.apply([], valuesy_shrinked),
@@ -141,21 +153,37 @@
         }
 
         function createStripes() {
+            if (!opts.stripes) return;
+
             var stripes = chart.stripes || initStripes();
+            var u = 0,
+                v = width - 2 * gutter;
 
-            for (i = 0, ii = valuesy_shrinked.length; i < ii; i++) {
-                for (var j = 0, jj = valuesx_shrinked[i].length - 1; j < jj; j++) {
-                    var u = Math.round( ((valuesx_shrinked[i] || valuesx_shrinked[0])[j] - minx) * kx ),
-                        v = Math.round( ((valuesx_shrinked[i] || valuesx_shrinked[0])[j+1] - minx) * kx ),
-                        value = (valuesy_shrinked[i][j] - miny) / (maxy - miny);
+            var u_min, v_max;
 
-                    for (u; u < v; u++) {
-                        // value is the saturation of the color from 0 to 1, where 0 is white and
-                        // 1 is full saturated.
-                        var color = paper.raphael.hsl(60, 100, 100 - (value * 50));
-                        stripes[u].attr({ stroke: color });
-                    }
+            for (var j = 0, jj = stripesx_shrinked.length - 1; j < jj; j++) {
+                u = Math.max(0, Math.round( (stripesx_shrinked[j] - minx) * kx )),
+                v = Math.min(width - 2 * gutter, Math.round( (stripesx_shrinked[j+1] - minx) * kx ));
+                var value = (stripesy_shrinked[j] - stripes_miny) / (stripes_maxy - stripes_miny);
+
+                u_min = Math.min(u, u_min);
+                v_max = Math.max(v, v_max);
+                //console.log(u + " - " + v);
+                for (u; u < v; u++) {
+                    // value is the saturation of the color from 0 to 1, where 0 is white and
+                    // 1 is full saturated.
+                    var color = paper.raphael.hsl(60, 100, 100 - (value * 50));
+                    stripes[u].attr({ stroke: color });
                 }
+            }
+
+            // reset stripes which are not set yet...
+            for (u_min; u_min > 0; --u_min) {
+                stripes[u_min].attr({ stroke: "#ffffff" });
+            }
+
+            for (v_max; v_max < (width - 2 * gutter); v_max++) {
+                stripes[v_max].attr({ stroke: "#ffffff" });
             }
 
             return stripes;
@@ -314,12 +342,16 @@
             !f && (dots = cvrs);
         }
 
-        chart.push(stripes, lines, shades, symbols, axis, columns, dots);
+        chart.push(lines, shades, symbols, axis, columns, dots);
         chart.lines = lines;
-        chart.stripes = stripes;
         chart.shades = shades;
         chart.symbols = symbols;
         chart.axis = axis;
+
+        if (opts.stripes) {
+            chart.push(stripes);
+            chart.stripes = stripes;
+        }
 
         chart.hoverColumn = function (fin, fout) {
             !columns && createColumns();
@@ -426,6 +458,10 @@
                 }
             }
 
+            if (opts.stripes) {
+                stripesx_shrinked = shrink(stripesx.slice(from[0], to[0]+1), width - 2 * gutter);
+                stripesy_shrinked = shrink(stripesy.slice(from[0], to[0]+1), width - 2 * gutter);
+            }
 
             allx = Array.prototype.concat.apply([], valuesx_shrinked);
             xdim = chartinst.snapEnds(Math.min.apply(Math, allx), Math.max.apply(Math, allx), max_len - 1);
@@ -438,7 +474,9 @@
               ydim = chartinst.snapEnds(Math.min.apply(Math, ally), Math.max.apply(Math, ally), max_len - 1),
               miny = ydim.from,
               maxy = ydim.to,
-              ky = (height - gutter * 2) / ((maxy - miny) || 1);
+              ky = (height - gutter * 2) / ((maxy - miny) || 1),
+              stripes_miny = Math.min.apply(Math, stripesy),
+              stripes_maxy = Math.max.apply(Math, stripesy);
             }
 
             var res = createLines();
