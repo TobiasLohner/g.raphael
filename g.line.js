@@ -510,18 +510,17 @@
                      x: x,
                      y: y,
                      kx: kx,
-                     ky: ky };
+                     ky: ky,
+                     primary: primary };
         }
 
-        chart.setStripesId = function(id, from, to) {
-            if (!opts.stripes) return;
+        chart.setPrimary = function(new_primary) {
+            if (new_primary == primary) return;
 
-            opts.stripes.id = id;
+            primary = new_primary;
 
-            stripesx_shrinked = shrink(stripesx[opts.stripes.id].slice(from, to+1), width - 2 * gutter);
-            stripesy_shrinked = shrink(stripesy[opts.stripes.id].slice(from, to+1), width - 2 * gutter);
-            stripes_miny = Math.min.apply(Math, stripesy[opts.stripes.id]),
-            stripes_maxy = Math.max.apply(Math, stripesy[opts.stripes.id]);
+            stripes_miny = Math.min.apply(Math, stripesy[primary]);
+            stripes_maxy = Math.max.apply(Math, stripesy[primary]);
 
             chart.stripes = createStripes();
         }
