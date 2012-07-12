@@ -79,7 +79,8 @@
             chart = paper.set(),
             path = [],
             primary = opts.primary || 0,
-            stripesy = (opts.stripes && opts.stripes.y) || [];
+            stripesy = (opts.stripes && opts.stripes.y) || [],
+            inactive_opacity = opts.inactive_opacity || 0.3;
 
         for (var i = 0, ii = valuesy.length; i < ii; i++) {
             len = Math.max(len, valuesy[i].length);
@@ -219,7 +220,8 @@
                         "stroke-width": opts.width || 2,
                         "stroke-linejoin": "round",
                         "stroke-linecap": "round",
-                        "stroke-dasharray": opts.dash || ""
+                        "stroke-dasharray": opts.dash || "",
+                        opacity: (i == primary) ? 1 : inactive_opacity
                     }));
                 }
 
@@ -525,15 +527,9 @@
             chart.stripes = createStripes();
 
             for (var i = 0; i < chart.lines.length; i++) {
-                if (i == primary) {
-                    chart.lines[i].attr({
-                      opacity: 1
-                    });
-                } else {
-                    chart.lines[i].attr({
-                      opacity: 0.5
-                    });
-                }
+                chart.lines[i].attr({
+                  opacity: (i == primary) ? 1 : inactive_opacity
+                });
             }
         }
 
