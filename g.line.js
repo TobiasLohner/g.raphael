@@ -98,7 +98,7 @@
             }
 
             if (opts.stripes) {
-                stripesy_shrinked[i] = shrink(stripesy[primary], width - 2 * gutter);
+                stripesy_shrinked[i] = shrink(stripesy[i], width - 2 * gutter);
             }
         }
 
@@ -463,7 +463,7 @@
                 }
 
                 if (opts.stripes) {
-                    stripesy_shrinked[i] = shrink(stripesy[primary].slice(from[primary], to[primary]+1), width - 2 * gutter);
+                    stripesy_shrinked[i] = shrink(stripesy[i].slice(from[i], to[i]+1), width - 2 * gutter);
                 }
             }
 
