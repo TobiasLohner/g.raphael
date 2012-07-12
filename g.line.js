@@ -523,6 +523,18 @@
             stripes_maxy = Math.max.apply(Math, stripesy[primary]);
 
             chart.stripes = createStripes();
+
+            for (var i = 0; i < chart.lines.length; i++) {
+                if (i == primary) {
+                    chart.lines[i].attr({
+                      opacity: 1
+                    });
+                } else {
+                    chart.lines[i].attr({
+                      opacity: 0.5
+                    });
+                }
+            }
         }
 
         return chart;
