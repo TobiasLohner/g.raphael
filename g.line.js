@@ -78,7 +78,6 @@
             dots = null,
             chart = paper.set(),
             path = [],
-            stripesx = (opts.stripes && opts.stripes.x) || [],
             stripesy = (opts.stripes && opts.stripes.y) || [];
 
         for (var i = 0, ii = valuesy.length; i < ii; i++) {
@@ -97,10 +96,9 @@
             }
         }
 
-        var stripesx_shrinked, stripesy_shrinked;
+        var stripesy_shrinked;
 
         if (opts.stripes) {
-          stripesx_shrinked = shrink(stripesx[opts.stripes.id], width - 2 * gutter);
           stripesy_shrinked = shrink(stripesy[opts.stripes.id], width - 2 * gutter);
         }
 
@@ -165,8 +163,8 @@
             var stripes_range = opts.stripes.range || Math.max(1, stripes_maxy - stripes_miny);
 
             for (var j = 0, jj = stripesy_shrinked.length - 1; j < jj; j++) {
-                u = Math.max(0, Math.round( (stripesx_shrinked[j] - minx) * kx )),
-                v = Math.min(width - 2 * gutter, Math.round( (stripesx_shrinked[j+1] - minx) * kx ));
+                u = Math.max(0, Math.round( (valuesx_shrinked[opts.stripes.id][j] - minx) * kx )),
+                v = Math.min(width - 2 * gutter, Math.round( (valuesx_shrinked[opts.stripes.id][j+1] - minx) * kx ));
                 var value = (stripesy_shrinked[j] - stripes_miny) / stripes_range;
 
                 u_min = Math.min(u, u_min);
@@ -466,7 +464,6 @@
             }
 
             if (opts.stripes) {
-                stripesx_shrinked = shrink(stripesx[opts.stripes.id].slice(from[opts.stripes.id], to[opts.stripes.id]+1), width - 2 * gutter);
                 stripesy_shrinked = shrink(stripesy[opts.stripes.id].slice(from[opts.stripes.id], to[opts.stripes.id]+1), width - 2 * gutter);
             }
 
