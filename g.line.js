@@ -147,8 +147,7 @@
             for (var dx = 0; dx < (width - 2 * gutter); dx++) {
                 var X = x + gutter + dx;
 
-                stripes.push(paper.path(["M", X, Y, "v", 0, h])
-                    .attr({ stroke: "#ffffff" }));
+                stripes.push(paper.rect(X, Y, 1, h, 0));
             }
 
             return stripes;
