@@ -189,7 +189,7 @@
                 stripes[i].attr({ stroke: "#ffffff" });
             }
 
-            for (var i = Math.max(v_max, u_min); i < (width - 2 * gutter); i++) {
+            for (var i = v_max; i < (width - 2 * gutter); i++) {
                 stripes[i].attr({ stroke: "#ffffff" });
             }
 
