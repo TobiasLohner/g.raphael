@@ -179,17 +179,32 @@
                         base_color.s * 100,
                         base_color.l * 100 + (100 - base_color.l * 100) * (1 - value)
                     );
-                    stripes[u].attr({ stroke: color });
+                    if (Raphael.svg) {
+                        // set stroke color directly for SVG because it's a lot faster
+                        stripes[u].node.setAttribute('stroke', color);
+                    } else {
+                        stripes[u].attr({ stroke: color });
+                    }
                 }
             }
 
             // reset stripes which are not set yet...
             for (var i = u_min - 1; i >= 0; i--) {
-                stripes[i].attr({ stroke: "#ffffff" });
+                if (Raphael.svg) {
+                    // set stroke color directly for SVG because it's a lot faster
+                    stripes[i].node.setAttribute('stroke', '#fff');
+                } else {
+                    stripes[i].attr({ stroke: '#fff' });
+                }
             }
 
             for (var i = v_max; i < (width - 2 * gutter); i++) {
-                stripes[i].attr({ stroke: "#ffffff" });
+                if (Raphael.svg) {
+                    // set stroke color directly for SVG because it's a lot faster
+                    stripes[i].node.setAttribute('stroke', '#fff');
+                } else {
+                    stripes[i].attr({ stroke: '#fff' });
+                }
             }
 
             return stripes;
