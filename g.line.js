@@ -158,17 +158,15 @@
             if (!opts.stripes || !stripes_visibility) return;
 
             var stripes = chart.stripes || initStripes();
-            var u = 0,
-                v = width - 2 * gutter;
 
-            var u_min = v,
-                v_max = u;
+            var u_min = width - 2 * gutter,
+                v_max = 0;
             var base_color = opts.stripes.color || { h: 0.42, s: 1, l: 0.5 };
             var stripes_range = opts.stripes.range || Math.max(1, stripes_maxy - stripes_miny);
 
             for (var j = 0, jj = stripesy_shrinked[primary].length - 1; j < jj; j++) {
-                u = Math.max(0, Math.round( (valuesx_shrinked[primary][j] - minx) * kx )),
-                v = Math.min(width - 2 * gutter, Math.round( (valuesx_shrinked[primary][j+1] - minx) * kx ));
+                var u = Math.max(0, Math.round( (valuesx_shrinked[primary][j] - minx) * kx )),
+                    v = Math.min(width - 2 * gutter, Math.round( (valuesx_shrinked[primary][j+1] - minx) * kx ));
                 var value = (stripesy_shrinked[primary][j] - stripes_miny) / stripes_range;
 
                 u_min = Math.min(u, u_min);
